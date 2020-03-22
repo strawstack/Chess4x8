@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+  <!-- jQueryUI -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+  <style>
+    body{
+        padding-top: 30px;
+        padding-left: 20px;
+    }
+    .board{
+      border: 1px solid #000000;
+      height: 642px;
+      width: 322px;
+    }
+    .row{
+      position: relative;
+      margin-left: 0px;
+    }
+    .sq{
+      float: left;
+      height: 80px;
+      width: 80px;
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+    .w{
+      background-color: white;
+    }
+    .b{
+      background-color: lightblue;
+    }
+    img{
+      margin-top: 10px;
+      z-index: 2;
+    }
+    .spot{
+      z-index: 3;
+      position: absolute;
+      margin-top: 0px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="board">
+
+          <div class="row">
+            <div class="sq w">
+              <img class="center-block img-responsive" id="BR1" src="BRook.png">
+            </div>
+            <div class="sq b">
+              <img class="center-block img-responsive" id="BQ" src="BQueen.png">
+            </div>
+            <div class="sq w">
+              <img class="center-block img-responsive" id="BK" src="BKing.png">
+            </div>
+            <div class="sq b">
+              <img class="center-block img-responsive" id="BR2" src="BRook.png">
+            </div>
+          </div>
+          <div class="row">
+            <div class="sq b">
+              <img class="center-block img-responsive" id="BP1" src="BPawn.png">
+            </div>
+            <div class="sq w">
+              <img class="center-block img-responsive" id="BP2" src="BPawn.png">
+            </div>
+            <div class="sq b">
+              <img class="center-block img-responsive" id="BP3" src="BPawn.png">
+            </div>
+            <div class="sq w">
+              <img class="center-block img-responsive" id="BP4" src="BPawn.png">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3 sq w"></div>
+            <div class="col-xs-3 sq b"></div>
+            <div class="col-xs-3 sq w"></div>
+            <div class="col-xs-3 sq b"></div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3 sq b"></div>
+            <div class="col-xs-3 sq w"></div>
+            <div class="col-xs-3 sq b"></div>
+            <div class="col-xs-3 sq w"></div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3 sq w"></div>
+            <div class="col-xs-3 sq b"></div>
+            <div class="col-xs-3 sq w"></div>
+            <div class="col-xs-3 sq b"></div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3 sq b"></div>
+            <div class="col-xs-3 sq w"></div>
+            <div class="col-xs-3 sq b"></div>
+            <div class="col-xs-3 sq w"></div>
+          </div>
+          <div class="row">
+            <div class="sq w">
+              <img class="center-block img-responsive" id="WP1" src="WPawn.png">
+            </div>
+            <div class="sq b">
+              <img class="center-block img-responsive" id="WP2" src="WPawn.png">
+            </div>
+            <div class="sq w">
+              <img class="center-block img-responsive" id="WP3" src="WPawn.png">
+            </div>
+            <div class="sq b">
+              <img class="center-block img-responsive" id="WP4" src="WPawn.png">
+            </div>
+          </div>
+          <div class="row">
+            <div class="sq b">
+              <img class="center-block img-responsive" id="WR1" src="WRook.png">
+            </div>
+            <div class="sq w">
+              <img class="center-block img-responsive" id="WQ" src="WQueen.png">
+            </div>
+            <div class="sq b">
+              <img class="center-block img-responsive" id="WK" src="WKing.png">
+            </div>
+            <div class="sq w">
+              <img class="center-block img-responsive" id="WR2" src="WRook.png">
+            </div>
+          </div>
+
+</div>
+
+<script>
+
+/* INITIAL PIECES STATE */
+var state = { // initial loc (in row-col form) and current loc of pieces
+  "BR1": { "loc": "18", "cloc": "18" },
+  "BQ": { "loc": "28", "cloc": "28" },
+  "BK": { "loc": "38", "cloc": "38" },
+  "BR2": { "loc": "48", "cloc": "48" },
+
+  "BP1": { "loc": "17", "cloc": "17" },
+  "BP2": { "loc": "27", "cloc": "27" },
+  "BP3": { "loc": "37", "cloc": "37" },
+  "BP4": { "loc": "47", "cloc": "47" },
+
+  "WP1": { "loc": "12", "cloc": "12" },
+  "WP2": { "loc": "22", "cloc": "22" },
+  "WP3": { "loc": "32", "cloc": "32" },
+  "WP4": { "loc": "42", "cloc": "42" },
+
+  "WR1": { "loc": "11", "cloc": "11" },
+  "WQ": { "loc": "21", "cloc": "21" },
+  "WK": { "loc": "31", "cloc": "31" },
+  "WR2": { "loc": "41", "cloc": "41" },
+
+  "png": []
+};
+
+var board = [
+  [ [], [], [], [], [], [], [], [] ],
+  [ [], [], [], [], [], [], [], [] ],
+  [ [], [], [], [], [], [], [], [] ],
+  [ [], [], [], [], [], [], [], [] ]
+];
+for(var c=0; c<board.length ; c++){ // sqs list attackers and the piece in the sq
+  for(var r=0; r<board[c].length ; r++){
+    board[c][r] = { "att": [], "p": "" };
+  }
+}
+for (var p in state) { // place pieces on board
+  if(p == "png"){ continue; }
+  board[ state[p].loc[0]-1 ][ state[p].loc[1] - 1 ]["p"] = p;
+}
+
+console.log( board );
+
+/* DRAGGABLE */
+$( "img" ).draggable({
+  containment: ".board",
+
+  start: function(ev, ui) {
+
+    var id = $(ev.target).attr("id");
+
+    // TODO - SHOW MOVE OPTIONS
+    showMoveOptionsForId( id );
+
+  },
+  drag: function() {
+
+  },
+  stop: function(ev, ui) {
+
+    // TODO - REMOVE MOVE OPTIONS
+
+    // PLACE PIECE CORRECTLY
+    var t = parseInt($(ev.target).css("top"));
+    var l = parseInt($(ev.target).css("left"));
+    var t_neg, l_neg;
+
+    (t < 0)? t_neg = -1 : t_neg = 1;
+    (l < 0)? l_neg = -1 : l_neg = 1;
+
+    if(Math.abs( t ) > 40){
+      $(ev.target).css("top", Math.floor(((t - 40) / 80) + 1) * 80 );
+    }else{
+      $(ev.target).css("top", 0);
+    }
+
+    if(Math.abs( l ) > 40){
+      $(ev.target).css("left", Math.floor(((l - 40) / 80) + 1) * 80 );
+    }else{
+      $(ev.target).css("left", 0);
+    }
+    // PLACE PIECE CORRECTLY - ENDS
+
+    // piece name
+    var id = $(ev.target).attr("id");
+
+    // initial location
+    var irow = state[id].loc[1];
+    var icol = state[id].loc[0];
+
+    // new loc relative to initial location
+    var row = -1 * Math.floor(((t - 40) / 80) + 1);
+    var col = Math.floor(((l - 40) / 80) + 1);
+
+    // TODO - VERIFY MOVE WAS LEGAL
+
+    // UPDATE PIECE POSITIONS
+    state[id].cloc = (parseInt(icol) + parseInt(col)) + "" + (parseInt(irow) + parseInt(row));
+
+    // TODO - UPDATE BOARD OBJECT
+
+    // TODO - UPDATE PNG
+
+    // TODO - wipe board and recalculate which squares are being attacked
+  }
+});
+
+
+/* highlight */
+function highlight(r, c){ // places highlight in square
+  getSquare(r,c).prepend("<img class='center-block img-responsive spot' src='spot.png'>");
+}
+function unhighlight(r, c){ // removes highlight from square
+  $(getSquare(r,c).children(".spot")).remove();
+}
+
+function getSquare(r,c){ // returns a jQuery obj that is the square at r x c
+  r = r - 1; c = c - 1;
+  return $($($(".row").get(7-r)).children()[c]);
+}
+
+//highlight(2, 3);
+//unhighlight(2, 3);
+
+/* move options */
+function showMoveOptionsForId( id ){
+  var r = state[id].cloc[1];
+  var c = state[id].cloc[0];
+  var p;
+  if(id.length == 3){ p = id[0] + id[1]; }else{ p = id; } //shorten "WP[1-4]" to "WP"
+  switch(p){
+    case "WP":
+
+      // TODO - determine possible moves for piece given cloc
+
+      // TODO - eliminate moves for squares that contain a piece
+
+      break;
+
+    case "WR":
+      break;
+
+    case "WQ":
+      break;
+
+    case "WK":
+      break;
+
+    case "BP":
+      break;
+
+    case "BR":
+      break;
+
+    case "BQ":
+      break;
+
+    case "BK":
+      break;
+  }
+}
+
+</script>
+
+</body>
+</html>
